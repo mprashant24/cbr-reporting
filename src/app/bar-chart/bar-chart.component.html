@@ -1,0 +1,12 @@
+<mat-divider></mat-divider>
+<mat-card>
+    <div>
+        <div><strong>Chart Title Here</strong></div>
+        <div style="display: block">
+            <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                [legend]="barChartLegend" [chartType]="chartType">
+            </canvas>
+        </div>
+    </div>
+</mat-card>
+<mat-divider></mat-divider>

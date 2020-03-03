@@ -1,0 +1,13 @@
+<mat-divider></mat-divider>
+<mat-card>
+    <div>
+        <div><strong>{{ title }}</strong></div>
+        <div style="display: block;">
+            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                [chartType]="chartType" [plugins]="lineChartPlugins">
+            </canvas>
+        </div>
+    </div>
+</mat-card>
+<mat-divider></mat-divider>

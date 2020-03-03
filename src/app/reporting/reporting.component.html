@@ -1,9 +1,19 @@
 <mat-toolbar color="primary">
-    <mat-toolbar-row >
+    <mat-toolbar-row>
         <span class="title-center">CBR Reporting</span>
     </mat-toolbar-row>
-    <mat-toolbar-row >
-        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="openDialog()">add</mat-icon>
+    <mat-toolbar-row>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="openDialog()">add
+        </mat-icon>
     </mat-toolbar-row>
 </mat-toolbar>
+<div>
+    <mat-progress-bar *ngIf="isGeneratingReport" mode="indeterminate"></mat-progress-bar>
+</div>
+<div *ngFor="let chart of charts">
+    <!-- <bar-chart></bar-chart>
+    <bar-chart [barChartLegend]=false [barChartLabels]="['2010', '2011', '2012', '2013', '2014', '2015', '2016']"></bar-chart>
+    <line-chart></line-chart> -->
+    <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels" [lineChartData]="chart.lineChartData" [title] = "chart.title"></line-chart>
 
+</div>

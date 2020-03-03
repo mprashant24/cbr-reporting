@@ -14,13 +14,21 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatProgressBarModule} from '@angular/material/progress-bar'
+import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { LineChartComponent } from './line-chart/line-chart.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ContrastService } from './contrast.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     ReportingComponent,
-    ConnectionDialog
+    ConnectionDialog,
+    BarChartComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -34,10 +42,13 @@ import {MatProgressBarModule} from '@angular/material/progress-bar'
     MatFormFieldModule,
     MatDialogModule,
     MatInputModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatCardModule,
+    MatDividerModule,
+    HttpClientModule
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],
-  providers: [],
+  providers: [ContrastService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
