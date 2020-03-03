@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { ChartsModule } from 'ng2-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReportingComponent, ConnectionDialog } from './reporting/reporting.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
@@ -21,6 +23,7 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ContrastService } from './contrast.service';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +48,9 @@ import { ContrastService } from './contrast.service';
     MatProgressBarModule,
     MatCardModule,
     MatDividerModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSidenavModule,
+    MatListModule
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],
   providers: [ContrastService],

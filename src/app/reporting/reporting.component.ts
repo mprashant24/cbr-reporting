@@ -49,65 +49,65 @@ export class ReportingComponent implements OnInit {
 
   generateReport(): void {
     this.contrastService.getApplicationForOrg("license").then(result => {
-    this.buildAppOnBoardingTrends(result.applications);
-  });
+      this.buildAppOnBoardingTrends(result.applications);
+    });
   }
 
   buildAppOnBoardingTrends(applications): void {
-      var appNames = applications.map(function (value) { return value.name });
-      var licensedAppsCreationDates = applications.filter(function (app) { return app.license.level.toUpperCase() === "LICENSED" }).map(function (app) { return app.created });
-      var unlicensedAppsCreationDates = applications.filter(function (app) { return app.license.level.toUpperCase() === "UNLICENSED" }).map(function (app) { return app.created });
-      
-      var months: [string, number, number][] = [["Jan", 0, 0], ["Feb", 0, 0], ["Mar", 0, 0], ["Apr", 0, 0], ["May", 0, 0], ["Jun", 0, 0], ["Jul", 0, 0], ["Aug", 0, 0], ["Sep", 0, 0], ["Oct", 0, 0], ["Nov", 0, 0], ["Dec", 0, 0]];
+    var appNames = applications.map(function (value) { return value.name });
+    var licensedAppsCreationDates = applications.filter(function (app) { return app.license.level.toUpperCase() === "LICENSED" }).map(function (app) { return app.created });
+    var unlicensedAppsCreationDates = applications.filter(function (app) { return app.license.level.toUpperCase() === "UNLICENSED" }).map(function (app) { return app.created });
 
-      var currentDate = new Date();
+    var months: [string, number, number][] = [["Jan", 0, 0], ["Feb", 0, 0], ["Mar", 0, 0], ["Apr", 0, 0], ["May", 0, 0], ["Jun", 0, 0], ["Jul", 0, 0], ["Aug", 0, 0], ["Sep", 0, 0], ["Oct", 0, 0], ["Nov", 0, 0], ["Dec", 0, 0]];
 
-      licensedAppsCreationDates.forEach(function (creationDate: number) {
-        var date = new Date(0);
-        date.setMilliseconds(creationDate);
-        if (Utilities.monthsDiff(date, currentDate) < 12){
-          months[date.getMonth()][1]++;
-        }else{
-          months[0][1]++;
-        }
-      });
+    var currentDate = new Date();
 
-      unlicensedAppsCreationDates.forEach(function (creationDate: number) {
-        var date = new Date(0);
-        date.setMilliseconds(creationDate);
-        if (Utilities.monthsDiff(date, currentDate) < 12){
-          months[date.getMonth()][2]++;
-        }else{
-          months[0][2]++;
-        }
-      });
-
-      var currentMonth = currentDate.getMonth();
-      while (currentMonth >= 0) {
-        var month = months.shift();
-        months.push(month);
-        currentMonth--;
+    licensedAppsCreationDates.forEach(function (creationDate: number) {
+      var date = new Date(0);
+      date.setMilliseconds(creationDate);
+      if (Utilities.monthsDiff(date, currentDate) < 12) {
+        months[date.getMonth()][1]++;
+      } else {
+        months[0][1]++;
       }
+    });
 
-      let labels:string[] = [];
-      let licensedAppCounts:number[] = [];
-      let unLicensedAppCounts:number[] = [];
-      months.forEach(function (row, index) {
-          if(index > 0){
-            this[index][1] += this[index - 1][1];
-            this[index][2] += this[index - 1][2];
-          }
-          labels.push(this[index][0]);
-          licensedAppCounts.push(this[index][1]);
-          unLicensedAppCounts.push(this[index][2]);
-      }, months);
-      
-      let appOnboardingLineChart = new LineChartComponent();
-      appOnboardingLineChart.title = "Application Onboarding Trend";
-      appOnboardingLineChart.setLineChartLables(labels);
-      appOnboardingLineChart.addSeries(licensedAppCounts, "Licensed Apps", false);
-      appOnboardingLineChart.addSeries(unLicensedAppCounts, "Unlicensed Apps", false);
-      this.charts.push(appOnboardingLineChart);
+    unlicensedAppsCreationDates.forEach(function (creationDate: number) {
+      var date = new Date(0);
+      date.setMilliseconds(creationDate);
+      if (Utilities.monthsDiff(date, currentDate) < 12) {
+        months[date.getMonth()][2]++;
+      } else {
+        months[0][2]++;
+      }
+    });
+
+    var currentMonth = currentDate.getMonth();
+    while (currentMonth >= 0) {
+      var month = months.shift();
+      months.push(month);
+      currentMonth--;
+    }
+
+    let labels: string[] = [];
+    let licensedAppCounts: number[] = [];
+    let unLicensedAppCounts: number[] = [];
+    months.forEach(function (row, index) {
+      if (index > 0) {
+        this[index][1] += this[index - 1][1];
+        this[index][2] += this[index - 1][2];
+      }
+      labels.push(this[index][0]);
+      licensedAppCounts.push(this[index][1]);
+      unLicensedAppCounts.push(this[index][2]);
+    }, months);
+
+    let appOnboardingLineChart = new LineChartComponent();
+    appOnboardingLineChart.title = "Application Onboarding Trend";
+    appOnboardingLineChart.setLineChartLables(labels);
+    appOnboardingLineChart.addSeries(licensedAppCounts, "Licensed Apps", false);
+    appOnboardingLineChart.addSeries(unLicensedAppCounts, "Unlicensed Apps", false);
+    this.charts.push(appOnboardingLineChart);
   }
 
 }
@@ -118,7 +118,6 @@ export class ReportingComponent implements OnInit {
   styleUrls: ['./connection-dialog.css']
 })
 export class ConnectionDialog {
-
   constructor(
     public dialogRef: MatDialogRef<ConnectionDialog>,
     @Inject(MAT_DIALOG_DATA) public data: ConnectionData) {

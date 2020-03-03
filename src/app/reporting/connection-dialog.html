@@ -1,33 +1,33 @@
 <h1 mat-dialog-title>TeamServer Connection Details</h1>
-<div mat-dialog-content >
+<div mat-dialog-content>
   <div>
     <mat-form-field>
       <mat-label>TeamServer URL</mat-label>
-      <input matInput [(ngModel)]="data.url" required [attr.disabled]="data.isGeneratingReport">
+      <input matInput [(ngModel)]="data.url" required>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Orgnization ID</mat-label>
-      <input matInput [(ngModel)]="data.orgId" required [attr.disabled]="data.isGeneratingReport">
+      <input matInput [(ngModel)]="data.orgId" required>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>User Name</mat-label>
-      <input matInput [(ngModel)]="data.username" required [attr.disabled]="data.isGeneratingReport">
+      <input matInput [(ngModel)]="data.username" required>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>API-Key</mat-label>
-      <input matInput [(ngModel)]="data.apiKey" required [attr.disabled]="data.isGeneratingReport">
+      <input matInput [(ngModel)]="data.apiKey" required>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Service Key</mat-label>
-      <input matInput [(ngModel)]="data.serviceKey" required [attr.disabled]="data.isGeneratingReport">
+      <input matInput [(ngModel)]="data.serviceKey" required>
     </mat-form-field>
   </div>
 </div>
@@ -36,6 +36,5 @@
   || data.orgId === undefined 
   || data.username === undefined 
   || data.apiKey === undefined 
-  || data.serviceKey === undefined 
-  ||  data.isGeneratingReport" >Generate Report</button>
+  || data.serviceKey === undefined">Generate Report</button>
 </div>
