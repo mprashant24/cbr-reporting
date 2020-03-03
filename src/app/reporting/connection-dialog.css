@@ -1,0 +1,21 @@
+mat-form-field {
+  width: 100%;
+}
+
+.mat-dialog-container {
+  padding: 0 !important;
+ }
+
+connection-dialog.ng-star-inserted > div {
+    margin-right: -24px;
+    margin-left: -24px;
+}
+
+.mat-dialog-actions {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.mat-dialog-title {
+  margin-top: 15px !important;
+}

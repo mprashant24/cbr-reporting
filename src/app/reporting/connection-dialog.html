@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>TeamServer Connection Details</h1>
+<div mat-dialog-content >
+  <div>
+    <mat-progress-bar *ngIf="data.isGeneratingReport" mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>TeamServer URL</mat-label>
+      <input matInput [(ngModel)]="data.url" [attr.disabled]="data.isGeneratingReport">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Orgnization ID</mat-label>
+      <input matInput [(ngModel)]="data.orgId" [attr.disabled]="data.isGeneratingReport">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>User Name</mat-label>
+      <input matInput [(ngModel)]="data.username" [attr.disabled]="data.isGeneratingReport">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>API-Key</mat-label>
+      <input matInput [(ngModel)]="data.apiKey" [attr.disabled]="data.isGeneratingReport">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Service Key</mat-label>
+      <input matInput [(ngModel)]="data.serviceKey" [attr.disabled]="data.isGeneratingReport">
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onGenerateReport()" [disabled]="data.isGeneratingReport" >Generate Report</button>
+</div>
