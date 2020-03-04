@@ -7,8 +7,7 @@ import { AppComponent } from './app.component';
 import { ChartsModule } from 'ng2-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReportingComponent, ConnectionDialog } from './reporting/reporting.component';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatListModule} from '@angular/material/list';
+import {MatGridListModule} from '@angular/material/grid-list';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
@@ -49,8 +48,8 @@ import { ContrastService } from './contrast.service';
     MatCardModule,
     MatDividerModule,
     HttpClientModule,
-    MatSidenavModule,
-    MatListModule
+    MatGridListModule
+  
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],
   providers: [ContrastService],

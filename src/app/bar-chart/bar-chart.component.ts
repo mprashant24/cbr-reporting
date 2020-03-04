@@ -9,34 +9,40 @@ export class BarChartComponent implements OnInit {
 
   constructor() { }
 
+  @Input() public title: string = "Default Title";
   @Input() public barChartOptions = {
     scaleShowVerticalLines: false,
-    responsive: true
+    responsive: true,
+    scales: {
+      xAxes: [{
+        stacked: true
+      }],
+      yAxes: [{
+        stacked: true
+      }]
+    },
+    legend: {
+      display: true
+    }
   };
-  @Input() public barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  @Input() public chartType = 'bar';
+
+  @Input() public barChartLabels = [];
+  @Input() public chartType = 'horizontalBar';
   @Input() public barChartLegend = true;
-  @Input() public barChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
+  @Input() public barChartData = [];
 
   ngOnInit(): void {
   }
 
-  setLabels(lables: []): void{
+  setLabels(lables: string[]): void {
     this.barChartLabels = lables;
   }
 
-  setChartType(chartType: string): void{
-    this.chartType = chartType;
+  displayLegend(enable: boolean): void {
+    this.barChartLegend = enable;
   }
 
-  displayLegend(enable: boolean): void{
-    this.barChartLegend = enable;
-  }  
-
-  setChartData(chartData:[]): void{
-    this.barChartData = chartData;
+  addSeries(labelText: string, values: number[]): void {
+    this.barChartData.push({ label: labelText, data: values });
   }
 }

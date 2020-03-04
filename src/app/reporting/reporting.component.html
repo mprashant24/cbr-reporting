@@ -4,7 +4,7 @@
             <span class="title-center">CBR Reporting</span>
         </mat-toolbar-row>
         <mat-toolbar-row>
-            <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="openDialog(); sidenav.toggle();">
+            <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="openDialog()">
                 add
             </mat-icon>
         </mat-toolbar-row>
@@ -12,24 +12,13 @@
             <mat-progress-bar *ngIf="isGeneratingReport" mode="indeterminate"></mat-progress-bar>
         </div>
     </mat-toolbar>
-    <mat-sidenav-container>
-        <mat-sidenav #sidenav mode="side" class="sidenav" [fixedInViewport]="true" [fixedTopGap]=128 [fixedBottomGap]=0>
-            <mat-nav-list>
-                <a mat-list-item routerLink="." *ngFor="let chart of charts">{{chart.title}}</a>
-              </mat-nav-list>
-        </mat-sidenav>
-
-        <mat-sidenav-content class="content">
-            <mat-card *ngFor="let chart of charts">
-                <!-- <bar-chart></bar-chart>
-            <bar-chart [barChartLegend]=false [barChartLabels]="['2010', '2011', '2012', '2013', '2014', '2015', '2016']"></bar-chart>
-            <line-chart></line-chart> -->
-                <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
-                    [lineChartData]="chart.lineChartData" [title]="chart.title"></line-chart>
-            </mat-card>
-            <mat-card *ngIf="charts.length == 0" >
-                <p></p>
-            </mat-card>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
+    <div *ngFor="let chart of charts" style="text-align: center; width: 50%; height: 50%;">
+        <!-- <bar-chart></bar-chart>
+    <line-chart></line-chart> -->
+        <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
+            [lineChartData]="chart.lineChartData" [title]="chart.title">
+        </line-chart>
+        <bar-chart *ngIf="chart.chartType === 'bar' || chart.chartType === 'horizontalBar'" [barChartLabels]="chart.barChartLabels"
+            [barChartData]="chart.barChartData" [title]="chart.title"></bar-chart>
+    </div>
 </ng-container>

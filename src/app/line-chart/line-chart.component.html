@@ -1,13 +1,15 @@
 <mat-divider></mat-divider>
-<mat-card>
-    <div>
+<mat-card >
+    <mat-card-header>
         <div><strong>{{ title }}</strong></div>
+    </mat-card-header>
+    <mat-card-content>
         <div style="display: block;">
-            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
-                [chartType]="chartType" [plugins]="lineChartPlugins">
+            <canvas  baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="chartType"
+                [plugins]="lineChartPlugins">
             </canvas>
         </div>
-    </div>
+    </mat-card-content>
 </mat-card>
 <mat-divider></mat-divider>
