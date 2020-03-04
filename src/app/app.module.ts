@@ -48,7 +48,8 @@ import { ContrastService } from './contrast.service';
     MatCardModule,
     MatDividerModule,
     HttpClientModule,
-    MatGridListModule
+    MatGridListModule,
+    
   
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],

@@ -1,15 +1,13 @@
 <mat-divider></mat-divider>
-<mat-card >
+<mat-card style="height: 100%;" >
     <mat-card-header>
         <div><strong>{{ title }}</strong></div>
     </mat-card-header>
-    <mat-card-content>
-        <div style="display: block;">
+    <mat-card-content style="height: 100%;">
             <canvas  baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
                 [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="chartType"
-                [plugins]="lineChartPlugins">
+                [plugins]="lineChartPlugins" >
             </canvas>
-        </div>
     </mat-card-content>
 </mat-card>
 <mat-divider></mat-divider>

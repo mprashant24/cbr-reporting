@@ -1,24 +1,28 @@
 <ng-container>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" style="background-color: #292929;">
         <mat-toolbar-row>
-            <span class="title-center">CBR Reporting</span>
-        </mat-toolbar-row>
-        <mat-toolbar-row>
-            <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon" (click)="openDialog()">
-                add
+            <img src="assets/logo-small.png" alt="Contrast-logo">
+            <span class="title-center">Business Review Metrics</span>
+            <mat-icon aria-hidden="false" (click)="openDialog()">
+                settings
             </mat-icon>
         </mat-toolbar-row>
         <div>
             <mat-progress-bar *ngIf="isGeneratingReport" mode="indeterminate"></mat-progress-bar>
         </div>
     </mat-toolbar>
-    <div *ngFor="let chart of charts" style="text-align: center; width: 50%; height: 50%;">
-        <!-- <bar-chart></bar-chart>
+    <mat-grid-list cols="2" rowHeight="50%">
+        <mat-grid-tile *ngFor="let chart of charts; index as i">
+            <div style="width: 100%; height: 100%;">
+                <!-- <bar-chart></bar-chart>
     <line-chart></line-chart> -->
-        <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
-            [lineChartData]="chart.lineChartData" [title]="chart.title">
-        </line-chart>
-        <bar-chart *ngIf="chart.chartType === 'bar' || chart.chartType === 'horizontalBar'" [barChartLabels]="chart.barChartLabels"
-            [barChartData]="chart.barChartData" [title]="chart.title"></bar-chart>
-    </div>
+                <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
+                    [lineChartData]="chart.lineChartData" [title]="chart.title">
+                </line-chart>
+                <bar-chart *ngIf="chart.chartType === 'bar' || chart.chartType === 'horizontalBar'"
+                    [barChartLabels]="chart.barChartLabels" [barChartData]="chart.barChartData" [title]="chart.title">
+                </bar-chart>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
 </ng-container>

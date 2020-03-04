@@ -1,12 +1,10 @@
 <mat-divider></mat-divider>
-<mat-card>
-    <div>
+<mat-card style="height: 100%;">
+    <div style="height: 100%;">
         <div><strong>{{ title }}</strong></div>
-        <div style="display: block">
             <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-                [legend]="barChartLegend" [chartType]="chartType">
+                [legend]="barChartLegend" [chartType]="chartType" >
             </canvas>
-        </div>
     </div>
 </mat-card>
 <mat-divider></mat-divider>
