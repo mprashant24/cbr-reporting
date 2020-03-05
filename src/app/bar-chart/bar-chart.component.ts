@@ -15,10 +15,10 @@ export class BarChartComponent implements OnInit {
     responsive: true,
     scales: {
       xAxes: [{
-        stacked: true
+        stacked: false
       }],
       yAxes: [{
-        stacked: true
+        stacked: false
       }]
     },
     legend: {
@@ -44,5 +44,10 @@ export class BarChartComponent implements OnInit {
 
   addSeries(labelText: string, values: number[]): void {
     this.barChartData.push({ label: labelText, data: values });
+  }
+
+  setStacked(stacked:boolean): void{
+    this.barChartOptions.scales.xAxes[0].stacked = stacked;
+    this.barChartOptions.scales.yAxes[0].stacked = stacked;
   }
 }

@@ -22,7 +22,7 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ContrastService } from './contrast.service';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -49,8 +49,7 @@ import { ContrastService } from './contrast.service';
     MatDividerModule,
     HttpClientModule,
     MatGridListModule,
-    
-  
+    FlexLayoutModule
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],
   providers: [ContrastService],

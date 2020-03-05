@@ -22,12 +22,12 @@ export class ContrastService {
   }
 
   public getApplicationForOrg(expand: string) {
-    var url = "https://contrast-cors.azurewebsites.net/" + this.teamServerURL + "api/ng/" + this.orgId + "/applications/filter?expand=" + expand;
+    var url = this.teamServerURL + "/api/ng/" + this.orgId + "/applications/filter?expand=" + expand;
     return this.makeAPICall(url);
   }
 
   public getVulnTrend() {
-    var url = "https://contrast-cors.azurewebsites.net/" + this.teamServerURL + "api/ng/" + this.orgId + "/orgtraces/stats/trend/year/new";
+    var url = this.teamServerURL + "/api/ng/" + this.orgId + "/orgtraces/stats/trend/year/new";
     return this.makeAPICall(url);
   }
 
