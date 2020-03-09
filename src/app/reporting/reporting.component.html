@@ -14,13 +14,14 @@
     <!-- <mat-grid-list cols="2" rowHeight="50%">
         <mat-grid-tile *ngFor="let chart of charts; index as i"> -->
     <div fxLayout="row wrap" fxLayout.xs="column wrap" fxAlignment="center center">
-        <div fxFlex.gt-xs="49%" *ngFor="let chart of charts;" fxLayout="column" fxLayoutGap="10px" fxAlignment="center center">
+        <div fxFlex.gt-xs="49%" *ngFor="let chart of charts;" fxLayout="column" fxLayoutGap="10px"
+            fxAlignment="center center">
             <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
-                [lineChartData]="chart.lineChartData" [title]="chart.title">
+                [lineChartData]="chart.lineChartData" [title]="chart.title" [chartType]="chart.chartType">
             </line-chart>
             <bar-chart *ngIf="chart.chartType === 'bar' || chart.chartType === 'horizontalBar'"
                 [barChartLabels]="chart.barChartLabels" [barChartData]="chart.barChartData" [title]="chart.title"
-                [barChartOptions]="chart.barChartOptions">
+                [barChartOptions]="chart.barChartOptions" [chartType]="chart.chartType">
             </bar-chart>
         </div>
     </div>

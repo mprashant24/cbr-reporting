@@ -20,7 +20,7 @@ export interface ConnectionData {
 })
 export class ReportingComponent implements OnInit {
 
-  url: string = "https://app.contrastsecurity.com/Contrast/";
+  url: string = "https://apptwo.contrastsecurity.com/Contrast/";
   orgId: string = "";
   username: string = "";
   apiKey: string = "";
@@ -50,12 +50,13 @@ export class ReportingComponent implements OnInit {
 
   generateReport(): void {
     this.charts = [];
-    this.contrastService.getApplicationForOrg("license,trace_breakdown").then(result => {
+    this.contrastService.getApplicationForOrg("license,trace_breakdown,coverage").then(result => {
       this.buildAppOnBoardingTrends(result.applications);
-      this.buildOnlineVsOfflineApps(result.applications);
-      this.buildAppsByLanguage(result.applications);
+      this.buildTop10WellTestedApps(result.applications);
       this.buildTop10AppsByVuln(result.applications);
       this.buildTop10RemediatingApps(result.applications);
+      this.buildOnlineVsOfflineApps(result.applications);
+      this.buildAppsByLanguage(result.applications);
     });
 
     this.contrastService.getVulnTrend().then(result => {
@@ -66,9 +67,40 @@ export class ReportingComponent implements OnInit {
   }
 
 
+  buildTop10WellTestedApps(applications: any) {
+    let appCoverageCounts: any[] = applications.filter(function (app) { return app.routes.discovered > 0; }).map(function (app) { return [app, app.routes.discovered != 0 ? (app.routes.exercised / app.routes.discovered * 100) : 0] });
+    appCoverageCounts.sort(function (first, second) {
+      return second[1] - first[1];
+    });
+
+    let top10Apps: any[] = appCoverageCounts.length >= 10 ? appCoverageCounts.slice(0, 10) : appCoverageCounts;
+    var coverageCounts = {};
+    top10Apps.forEach(function (arrValue) {
+      let app = arrValue[0];
+      coverageCounts[app.name] = coverageCounts[app.name] || {};
+      coverageCounts[app.name]["discovered"] = app.routes.discovered;
+      coverageCounts[app.name]["exercised"] = app.routes.exercised;
+    });
+
+    let top10AppsByTraceChart = new BarChartComponent();
+    top10AppsByTraceChart.chartType = "bar";
+    top10AppsByTraceChart.title = "Top 10 Well Tested Apps";
+    top10AppsByTraceChart.setLabels(Object.keys(coverageCounts));
+    let discoveredRouteCounts: number[] = [];
+    let exercisedRouteCounts: number[] = [];
+    Object.keys(coverageCounts).forEach(function (key) {
+      discoveredRouteCounts.push(coverageCounts[key]["discovered"]);
+      exercisedRouteCounts.push(coverageCounts[key]["exercised"]);
+    });
+    top10AppsByTraceChart.addSeries("Discovered", discoveredRouteCounts);
+    top10AppsByTraceChart.addSeries("Exercised", exercisedRouteCounts);
+    this.charts.push(top10AppsByTraceChart);
+  }
+
+
   buildTop10RemediatingApps(applications: any) {
-    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.remediated + app.trace_breakdown.confirmed + app.trace_breakdown.suspicious + app.trace_breakdown.notProblem]});
-    appTraceCounts.sort(function(first, second) {
+    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.remediated + app.trace_breakdown.confirmed + app.trace_breakdown.suspicious + app.trace_breakdown.notProblem] });
+    appTraceCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
 
@@ -77,33 +109,33 @@ export class ReportingComponent implements OnInit {
     top10Apps.forEach(function (arrValue) {
       let app = arrValue[0];
       traceCounts[app.name] = traceCounts[app.name] || {};
-      traceCounts[app.name]["total"] = app.trace_breakdown.traces;
+      traceCounts[app.name]["Reported"] = app.trace_breakdown.reported;
       traceCounts[app.name]["closed"] = app.trace_breakdown.remediated + app.trace_breakdown.notProblem;
       traceCounts[app.name]["in_progress"] = app.trace_breakdown.confirmed + app.trace_breakdown.suspicious;
     });
 
     let top10AppsByTraceChart = new BarChartComponent();
-    top10AppsByTraceChart.chartType = "bar";
-    top10AppsByTraceChart.title = "Top 10 Apps by (Remdiated & In progress) Vulnrabilities Count";
+    top10AppsByTraceChart.setStacked(true);
+    top10AppsByTraceChart.title = "Top 10 Apps by (Reported vs Remdiated vs In progress) Vulnrabilities Count";
     top10AppsByTraceChart.setLabels(Object.keys(traceCounts));
-    let totalVulnCounts: number[] = [];
+    let reportedVulnCounts: number[] = [];
     let remediatedVulnCounts: number[] = [];
     let inProgressVulnCounts: number[] = [];
     Object.keys(traceCounts).forEach(function (key) {
-      totalVulnCounts.push(traceCounts[key]["total"]);
+      reportedVulnCounts.push(traceCounts[key]["Reported"]);
       remediatedVulnCounts.push(traceCounts[key]["closed"]);
       inProgressVulnCounts.push(traceCounts[key]["in_progress"]);
     });
-    top10AppsByTraceChart.addSeries("Total", totalVulnCounts);
+    top10AppsByTraceChart.addSeries("Reported", reportedVulnCounts);
     top10AppsByTraceChart.addSeries("Closed", remediatedVulnCounts);
     top10AppsByTraceChart.addSeries("In Progress", inProgressVulnCounts);
     this.charts.push(top10AppsByTraceChart);
   }
 
 
-  buildTop10AppsByVuln(applications: any) : void{
-    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.criticals + app.trace_breakdown.highs]});
-    appTraceCounts.sort(function(first, second) {
+  buildTop10AppsByVuln(applications: any): void {
+    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.criticals + app.trace_breakdown.highs] });
+    appTraceCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
 
@@ -202,13 +234,13 @@ export class ReportingComponent implements OnInit {
     let vulnTrendLineChart = new LineChartComponent();
     vulnTrendLineChart.title = "Application Vulnerability Trend";
     vulnTrendLineChart.setLineChartLables(labels);
-    vulnTrendLineChart.addSeries(reportedCounts, "Reported", false);
-    vulnTrendLineChart.addSeries(suspiciousCounts, "Suspicious", false);
-    vulnTrendLineChart.addSeries(confirmedCounts, "Confirmed", false);
-    vulnTrendLineChart.addSeries(notAProblemCounts, "NotAProblem", false);
-    vulnTrendLineChart.addSeries(remediatedCounts, "Remediated", false);
-    vulnTrendLineChart.addSeries(fixedCounts, "Fixed", false);
-    vulnTrendLineChart.addSeries(autoRemediatedCounts, "AutoRemediated", false);
+    vulnTrendLineChart.addSeries(reportedCounts, "Reported : " + reportedCounts[reportedCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(suspiciousCounts, "Suspicious : " + suspiciousCounts[suspiciousCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(confirmedCounts, "Confirmed : " + confirmedCounts[confirmedCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(notAProblemCounts, "NotAProblem : " + notAProblemCounts[notAProblemCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(remediatedCounts, "Remediated : " + remediatedCounts[remediatedCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(fixedCounts, "Fixed : " + fixedCounts[fixedCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(autoRemediatedCounts, "AutoRemediated : " + autoRemediatedCounts[autoRemediatedCounts.length - 1], false);
     this.charts.push(vulnTrendLineChart);
   }
 
@@ -269,8 +301,8 @@ export class ReportingComponent implements OnInit {
 
     var currentDate = new Date();
 
-    let yearOldLicensedApps:number = 0;
-    let yearOldUnlicensedApps:number = 0;
+    let yearOldLicensedApps: number = 0;
+    let yearOldUnlicensedApps: number = 0;
 
     licensedAppsCreationDates.forEach(function (creationDate: number) {
       var date = new Date(0);
@@ -278,7 +310,6 @@ export class ReportingComponent implements OnInit {
       if (Utilities.monthsDiff(date, currentDate) < 12) {
         months[date.getMonth()][1]++;
       } else {
-        console.log(date);
         yearOldLicensedApps++;
       }
     });
@@ -289,7 +320,6 @@ export class ReportingComponent implements OnInit {
       if (Utilities.monthsDiff(date, currentDate) < 12) {
         months[date.getMonth()][2]++;
       } else {
-        console.log(date);
         yearOldUnlicensedApps++;
       }
     });
@@ -308,7 +338,7 @@ export class ReportingComponent implements OnInit {
       if (index > 0) {
         this[index][1] += this[index - 1][1];
         this[index][2] += this[index - 1][2];
-      }else if (index == 0){
+      } else if (index == 0) {
         this[0][1] += yearOldUnlicensedApps;
         this[0][2] += yearOldUnlicensedApps;
       }
