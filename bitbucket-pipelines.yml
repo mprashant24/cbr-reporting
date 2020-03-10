@@ -1,30 +1,12 @@
-# This is a sample build configuration for JavaScript.
-# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
-image: node:10.15.3
+# enable Docker for the repository
+options:
+  docker: true
 
+# Start the pipeline
 pipelines:
   default:
-    - step:
-        caches:
-          - node
-        script: # Modify the commands below to build your repository.
-          - pwd        
-          - ls
-          - npm install
-          - npm i @angular/cli
-          - npm install -g bestzip
-          - npm run build-prod
-          - bestzip cbr-reporting.zip dist/cbr-reporting 
-          - pipe: microsoft/azure-web-apps-deploy:1.0.2
-            variables:
-                  AZURE_APP_ID: $AZURE_APP_ID
-                  AZURE_PASSWORD: $AZURE_PASSWORD
-                  AZURE_TENANT_ID: $AZURE_TENANT_ID
-                  AZURE_RESOURCE_GROUP: 'customer-success-pm'
-                  AZURE_APP_NAME: 'cbr-reporting'
-                  ZIP_FILE: 'cbr-reporting.zip'
-                  # SLOT: 'string' # Optional.
-                  DEBUG: 'true' # Optional.
+  - step:
+      script: # Name the image and create a docker image
+      - docker build -t "cbr_reporting/cbr_reporting:latest" . 
+      - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD $DOCKER_SERVER
+      - docker push cbr_reporting/cbr_reporting:latest
