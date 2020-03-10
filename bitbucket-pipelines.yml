@@ -1,6 +1,7 @@
 # enable Docker for the repository
 options:
   docker: true
+  size: 2x
 
 # Start the pipeline
 pipelines:
