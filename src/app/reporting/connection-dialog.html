@@ -21,20 +21,20 @@
   <div>
     <mat-form-field>
       <mat-label>API-Key</mat-label>
-      <input matInput [(ngModel)]="data.apiKey" required>
+      <input type="password" matInput [(ngModel)]="data.apiKey" required>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Service Key</mat-label>
-      <input matInput [(ngModel)]="data.serviceKey" required>
+      <input type="password" matInput [(ngModel)]="data.serviceKey" required>
     </mat-form-field>
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data" [disabled]="data.url === undefined 
-  || data.orgId === undefined 
-  || data.username === undefined 
-  || data.apiKey === undefined 
-  || data.serviceKey === undefined">Generate Report</button>
+  <button mat-button [mat-dialog-close]="data" [disabled]='data.url === "" 
+  || data.orgId === "" 
+  || data.username === ""
+  || data.apiKey === "" 
+  || data.serviceKey === ""'>Generate Report</button>
 </div>
