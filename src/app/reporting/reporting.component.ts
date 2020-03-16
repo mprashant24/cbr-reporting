@@ -116,7 +116,7 @@ export class ReportingComponent implements OnInit {
 
     let top10AppsByTraceChart = new BarChartComponent();
     top10AppsByTraceChart.setStacked(true);
-    top10AppsByTraceChart.title = "Top 10 Apps by (Reported vs Remdiated vs In progress) Vulnrabilities Count";
+    top10AppsByTraceChart.title = "Top 10 Apps by (Reported vs Remediated vs In progress) Vulnerabilities Count";
     top10AppsByTraceChart.setLabels(Object.keys(traceCounts));
     let reportedVulnCounts: number[] = [];
     let remediatedVulnCounts: number[] = [];
