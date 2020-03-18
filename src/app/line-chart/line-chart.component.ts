@@ -9,7 +9,7 @@ import { Color, Label } from 'ng2-charts';
 })
 export class LineChartComponent implements OnInit {
 
-  @Input() public title:string = "Default Title";
+  @Input() public title: string = "Default Title";
   @Input() public lineChartData: ChartDataSets[] = [];
   @Input() public lineChartLabels: Label[] = [];
   @Input() public lineChartOptions: ChartOptions = {
@@ -34,20 +34,24 @@ export class LineChartComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public setLineChartLables(labels:string[]):void{
+  public setLineChartLables(labels: string[]): void {
     this.lineChartLabels = labels;
   }
 
-  public addSeries(dataArray:number[], labelText:string, backGroundFill:boolean){
-    this.lineChartData.push({data : dataArray, label: labelText, fill:backGroundFill});
+  public addSeries(dataArray: number[], labelText: string, backGroundFill: boolean) {
+    this.lineChartData.push({ data: dataArray, label: labelText, fill: backGroundFill });
   }
 
-  public setLineColors(colors: Color[]):void{
+  public setLineColors(colors: Color[]): void {
     this.lineChartColors = colors;
   }
 
-  public setTitle(text:string): void{
+  public setTitle(text: string): void {
     this.title = text;
+  }
+
+  public setCustomTooltip(options : ChartOptions) {
+    this.lineChartOptions = options;
   }
 
 }

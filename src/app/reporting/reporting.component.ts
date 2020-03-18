@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { ContrastService } from '../contrast.service';
 import { LineChartComponent } from '../line-chart/line-chart.component';
+import { ChartOptions } from 'chart.js';
 
 
 export interface ConnectionData {
@@ -185,10 +186,10 @@ export class ReportingComponent implements OnInit {
     closed.forEach(function (trend) {
       var date = new Date(0);
       date.setMilliseconds(trend.timestamp);
-      var notAProblemCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "NOTAPROBLEM" }).map(function (status) { return status.value; });
-      var remediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "REMIDIATED" }).map(function (status) { return status.value; });
-      var fixedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "FIXED" }).map(function (status) { return status.value; });
-      var autoRemediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "AUTOREMEDIATED" }).map(function (status) { return status.value; });
+      var notAProblemCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "NOTAPROBLEM" }).map(function (status) { return -1*status.value; });
+      var remediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "REMIDIATED" }).map(function (status) { return -1*status.value; });
+      var fixedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "FIXED" }).map(function (status) { return -1*status.value; });
+      var autoRemediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "AUTOREMEDIATED" }).map(function (status) { return -1*status.value; });
       data[date.getMonth()][4] += notAProblemCount.length == 1 ? notAProblemCount[0] : 0;
       data[date.getMonth()][5] += remediatedCount.length == 1 ? remediatedCount[0] : 0;
       data[date.getMonth()][6] += fixedCount.length == 1 ? fixedCount[0] : 0;
@@ -212,15 +213,6 @@ export class ReportingComponent implements OnInit {
     let fixedCounts: number[] = [];
     let autoRemediatedCounts: number[] = [];
     data.forEach(function (row, index) {
-      if (index > 0) {
-        this[index][1] += this[index - 1][1];
-        this[index][2] += this[index - 1][2];
-        this[index][3] += this[index - 1][3];
-        this[index][4] += this[index - 1][4];
-        this[index][5] += this[index - 1][5];
-        this[index][6] += this[index - 1][6];
-        this[index][7] += this[index - 1][7];
-      }
       labels.push(this[index][0]);
       reportedCounts.push(this[index][1]);
       suspiciousCounts.push(this[index][2]);
@@ -234,13 +226,13 @@ export class ReportingComponent implements OnInit {
     let vulnTrendLineChart = new LineChartComponent();
     vulnTrendLineChart.title = "Application Vulnerability Trend";
     vulnTrendLineChart.setLineChartLables(labels);
-    vulnTrendLineChart.addSeries(reportedCounts, "Reported : " + reportedCounts[reportedCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(suspiciousCounts, "Suspicious : " + suspiciousCounts[suspiciousCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(confirmedCounts, "Confirmed : " + confirmedCounts[confirmedCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(notAProblemCounts, "NotAProblem : " + notAProblemCounts[notAProblemCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(remediatedCounts, "Remediated : " + remediatedCounts[remediatedCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(fixedCounts, "Fixed : " + fixedCounts[fixedCounts.length - 1], false);
-    vulnTrendLineChart.addSeries(autoRemediatedCounts, "AutoRemediated : " + autoRemediatedCounts[autoRemediatedCounts.length - 1], false);
+    vulnTrendLineChart.addSeries(reportedCounts, "Reported", false);
+    vulnTrendLineChart.addSeries(suspiciousCounts, "Suspicious", false);
+    vulnTrendLineChart.addSeries(confirmedCounts, "Confirmed", false);
+    vulnTrendLineChart.addSeries(notAProblemCounts, "NotAProblem", false);
+    vulnTrendLineChart.addSeries(remediatedCounts, "Remediated", false);
+    vulnTrendLineChart.addSeries(fixedCounts, "Fixed", false);
+    vulnTrendLineChart.addSeries(autoRemediatedCounts, "AutoRemediated", false);
     this.charts.push(vulnTrendLineChart);
   }
 

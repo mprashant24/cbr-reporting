@@ -17,7 +17,7 @@
         <div fxFlex.gt-xs="49%" *ngFor="let chart of charts;" fxLayout="column" fxLayoutGap="10px"
             fxAlignment="center center">
             <line-chart *ngIf="chart.chartType === 'line'" [lineChartLabels]="chart.lineChartLabels"
-                [lineChartData]="chart.lineChartData" [title]="chart.title" [chartType]="chart.chartType">
+                [lineChartData]="chart.lineChartData" [title]="chart.title" [chartType]="chart.chartType" [lineChartOptions] = "chart.lineChartOptions">
             </line-chart>
             <bar-chart *ngIf="chart.chartType === 'bar' || chart.chartType === 'horizontalBar'"
                 [barChartLabels]="chart.barChartLabels" [barChartData]="chart.barChartData" [title]="chart.title"
