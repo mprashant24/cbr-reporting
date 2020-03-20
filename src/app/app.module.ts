@@ -23,6 +23,7 @@ import { LineChartComponent } from './line-chart/line-chart.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ContrastService } from './contrast.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReportingComponent,
     ConnectionDialog,
     BarChartComponent,
-    LineChartComponent
+    LineChartComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,

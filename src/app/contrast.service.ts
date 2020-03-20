@@ -31,6 +31,11 @@ export class ContrastService {
     return this.makeAPICall(url);
   }
 
+  getLicenseDetails() {
+    var url = this.teamServerURL + "/api/ng/" + this.orgId + "/licenses";
+    return this.makeAPICall(url);
+  }
+
   private async makeAPICall(url: string): Promise<any>{
     var encodedAuthInformation = btoa(this.username + ":" + this.serviceKey);
     let reqHeaders = new HttpHeaders()

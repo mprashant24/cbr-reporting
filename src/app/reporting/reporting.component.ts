@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { BarChartComponent } from '../bar-chart/bar-chart.component';
 import { ContrastService } from '../contrast.service';
 import { LineChartComponent } from '../line-chart/line-chart.component';
-import { ChartOptions } from 'chart.js';
+import { PieChartComponent } from "../pie-chart/pie-chart.component";
 
 
 export interface ConnectionData {
@@ -64,7 +64,24 @@ export class ReportingComponent implements OnInit {
       this.buildVulnTrend(result.open, result.closed);
     });
 
+    this.contrastService.getLicenseDetails().then(result => {
+      this.buildLicenseChart(result);
+    });
+
     this.isGeneratingReport = false;
+  }
+  buildLicenseChart(license) {
+    let pieChart = new PieChartComponent();
+    let expirationDate = new Date(0);
+    let expirationDates:string[] = license.breakdown.expiration_date_unused_licenses.map(function(expirationDate){ 
+      let expDate = new Date(0);
+      expDate.setMilliseconds(expirationDate.expiration);
+      return expDate.toDateString()});
+    expirationDate.setMilliseconds(license.breakdown.max_expiration_date);
+    pieChart.setTitle("License Usage & Expiration : [" + expirationDates.join(",") + "]");
+    pieChart.setChartData([license.breakdown.used, license.breakdown.unused]);
+    pieChart.setLabels(["Used", "Unused"]);
+    this.charts.push(pieChart);
   }
 
 
@@ -169,31 +186,29 @@ export class ReportingComponent implements OnInit {
   }
 
   buildVulnTrend(open: any, closed: any) {
-    var data: [string, number, number, number, number, number, number, number][] = [["Jan", 0, 0, 0, 0, 0, 0, 0], ["Feb", 0, 0, 0, 0, 0, 0, 0], ["Mar", 0, 0, 0, 0, 0, 0, 0], ["Apr", 0, 0, 0, 0, 0, 0, 0], ["May", 0, 0, 0, 0, 0, 0, 0],
-    ["Jun", 0, 0, 0, 0, 0, 0, 0], ["Jul", 0, 0, 0, 0, 0, 0, 0], ["Aug", 0, 0, 0, 0, 0, 0, 0], ["Sep", 0, 0, 0, 0, 0, 0, 0], ["Oct", 0, 0, 0, 0, 0, 0, 0],
-    ["Nov", 0, 0, 0, 0, 0, 0, 0], ["Dec", 0, 0, 0, 0, 0, 0, 0]];
+    var data: [string, number, number][] = [
+      ["Jan", 0, 0], 
+      ["Feb", 0, 0], 
+      ["Mar", 0, 0],
+      ["Apr", 0, 0],
+      ["May", 0, 0],
+      ["Jun", 0, 0],
+      ["Jul", 0, 0], 
+      ["Aug", 0, 0], 
+      ["Sep", 0, 0], 
+      ["Oct", 0, 0],
+      ["Nov", 0, 0], 
+      ["Dec", 0, 0]];
     open.forEach(function (trend) {
       var date = new Date(0);
       date.setMilliseconds(trend.timestamp);
-      var reportedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "REPORTED" }).map(function (status) { return status.value; });
-      var suspiciousCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "SUSPICIOUS" }).map(function (status) { return status.value; });
-      var confirmedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "CONFIRMED" }).map(function (status) { return status.value; });
-      data[date.getMonth()][1] += reportedCount.length == 1 ? reportedCount[0] : 0;
-      data[date.getMonth()][2] += suspiciousCount.length == 1 ? suspiciousCount[0] : 0;
-      data[date.getMonth()][3] += confirmedCount.length == 1 ? confirmedCount[0] : 0;
+      data[date.getMonth()][1] = trend.count;
     });
 
     closed.forEach(function (trend) {
       var date = new Date(0);
       date.setMilliseconds(trend.timestamp);
-      var notAProblemCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "NOTAPROBLEM" }).map(function (status) { return -1*status.value; });
-      var remediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "REMIDIATED" }).map(function (status) { return -1*status.value; });
-      var fixedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "FIXED" }).map(function (status) { return -1*status.value; });
-      var autoRemediatedCount = trend.statusBreakdown.filter(function (status) { return status.name.toUpperCase() === "AUTOREMEDIATED" }).map(function (status) { return -1*status.value; });
-      data[date.getMonth()][4] += notAProblemCount.length == 1 ? notAProblemCount[0] : 0;
-      data[date.getMonth()][5] += remediatedCount.length == 1 ? remediatedCount[0] : 0;
-      data[date.getMonth()][6] += fixedCount.length == 1 ? fixedCount[0] : 0;
-      data[date.getMonth()][7] += autoRemediatedCount.length == 1 ? autoRemediatedCount[0] : 0;
+      data[date.getMonth()][2] = -1*trend.count;
     });
 
     var currentDate = new Date();
@@ -205,34 +220,19 @@ export class ReportingComponent implements OnInit {
     }
 
     let labels: string[] = [];
-    let reportedCounts: number[] = [];
-    let suspiciousCounts: number[] = [];
-    let confirmedCounts: number[] = [];
-    let notAProblemCounts: number[] = [];
-    let remediatedCounts: number[] = [];
-    let fixedCounts: number[] = [];
-    let autoRemediatedCounts: number[] = [];
+    let openCounts: number[] = [];
+    let closedCounts: number[] = [];
     data.forEach(function (row, index) {
       labels.push(this[index][0]);
-      reportedCounts.push(this[index][1]);
-      suspiciousCounts.push(this[index][2]);
-      confirmedCounts.push(this[index][3]);
-      notAProblemCounts.push(this[index][4]);
-      remediatedCounts.push(this[index][5]);
-      fixedCounts.push(this[index][6]);
-      autoRemediatedCounts.push(this[index][7]);
+      openCounts.push(this[index][1]);
+      closedCounts.push(this[index][2]);
     }, data);
 
     let vulnTrendLineChart = new LineChartComponent();
     vulnTrendLineChart.title = "Application Vulnerability Trend";
     vulnTrendLineChart.setLineChartLables(labels);
-    vulnTrendLineChart.addSeries(reportedCounts, "Reported", false);
-    vulnTrendLineChart.addSeries(suspiciousCounts, "Suspicious", false);
-    vulnTrendLineChart.addSeries(confirmedCounts, "Confirmed", false);
-    vulnTrendLineChart.addSeries(notAProblemCounts, "NotAProblem", false);
-    vulnTrendLineChart.addSeries(remediatedCounts, "Remediated", false);
-    vulnTrendLineChart.addSeries(fixedCounts, "Fixed", false);
-    vulnTrendLineChart.addSeries(autoRemediatedCounts, "AutoRemediated", false);
+    vulnTrendLineChart.addSeries(openCounts, "Open", false);
+    vulnTrendLineChart.addSeries(closedCounts, "Closed", false);
     this.charts.push(vulnTrendLineChart);
   }
 

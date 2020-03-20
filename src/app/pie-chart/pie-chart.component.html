@@ -1,0 +1,11 @@
+<mat-divider></mat-divider>
+<mat-card style="height: 100%;">
+    <mat-card-header>
+        <div><strong>{{ title }}</strong></div>
+    </mat-card-header>
+    <mat-card-content style="height: 100%;">
+        <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="chartType">
+        </canvas>
+    </mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>
