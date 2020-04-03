@@ -60,6 +60,10 @@ export class ReportingComponent implements OnInit {
       this.buildAppsByLanguage(result.applications);
     });
 
+    this.contrastService.getLibrariesForOrg("apps").then(result => {
+      this.buildTop10LibsByVuln(result.libraries);
+    });
+
     this.contrastService.getVulnTrend().then(result => {
       this.buildVulnTrend(result.open, result.closed);
     });
@@ -346,7 +350,37 @@ export class ReportingComponent implements OnInit {
     appOnboardingLineChart.addSeries(unLicensedAppCounts, "Unlicensed Apps", false);
     this.charts.push(appOnboardingLineChart);
   }
+  buildTop10LibsByVuln(libraries: any): void {
+    let LibVulnCounts: any[] = libraries.map(function (libs) {return [libs,libs.total_vulnerabilities] });
+    LibVulnCounts.sort(function (first, second) {
+      return second[1] - first[1];
+    });
 
+    let top10Libs: any[] = LibVulnCounts.length >=10 ? LibVulnCounts.slice(0, 10) : LibVulnCounts;
+    var traceCounts = {};
+    top10Libs.forEach(function (arrValue) {
+      let libs = arrValue[0];
+      traceCounts[libs.file_name] = traceCounts[libs.file_name] || {};
+      traceCounts[libs.file_name]["total"] = libs.total_vulnerabilities;
+      traceCounts[libs.file_name]["highs"] = libs.high_vulnerabilities;
+    });
+
+    let top10LibsByTraceChart = new BarChartComponent();
+    top10LibsByTraceChart.chartType = "bar";
+    top10LibsByTraceChart.title = "Top 10 Libraries by Vulnerabilities Count";
+    top10LibsByTraceChart.setLabels(Object.keys(traceCounts));
+    let totalVulnCounts: number[] = [];
+    Object.keys(traceCounts).forEach(function (key) {
+      totalVulnCounts.push(traceCounts[key]["total"]);
+    });
+    top10LibsByTraceChart.addSeries("Total", totalVulnCounts);
+    let highVulnCounts: number[] = [];
+    Object.keys(traceCounts).forEach(function (key) {
+      highVulnCounts.push(traceCounts[key]["highs"]);
+    });
+    top10LibsByTraceChart.addSeries("Highs", highVulnCounts);
+    this.charts.push(top10LibsByTraceChart);
+  }
 }
 
 @Component({

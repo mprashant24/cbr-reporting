@@ -21,6 +21,10 @@ export class ContrastService {
     this.serviceKey = serviceKey;
   }
 
+  public getLibrariesForOrg(expand: string) {
+    var url = this.teamServerURL + "/api/ng/" + this.orgId + "/libraries?limit=10&quickFilter=VULNERABLE&sort=score&exapand=" + expand;
+    return this.makeAPICall(url);
+  }
   public getApplicationForOrg(expand: string) {
     var url = this.teamServerURL + "/api/ng/" + this.orgId + "/applications/filter?expand=" + expand;
     return this.makeAPICall(url);
