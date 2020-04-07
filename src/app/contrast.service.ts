@@ -31,8 +31,13 @@ export class ContrastService {
     return this.makeAPICall(url);
   }
 
-  getLicenseDetails() {
+  getAssessLicenseDetails() {
     var url = this.teamServerURL + "/api/ng/" + this.orgId + "/licenses";
+    return this.makeAPICall(url);
+  }
+
+  getProtectLicenseDetails() {
+    var url = this.teamServerURL + "/api/ng/" + this.orgId + "/rasp/licenses";
     return this.makeAPICall(url);
   }
 
@@ -42,16 +47,14 @@ export class ContrastService {
       .set("Authorization", encodedAuthInformation)
       .set('API-Key', this.apiKey)
       .set('accept', 'application/json');
-    let result = await this.httpClient.get<any>(url, { headers: reqHeaders }).toPromise().then(this.extractData).catch(this.handleError);
+    let result = await this.httpClient.get<any>(url, { headers: reqHeaders }).toPromise().then(this.extractData).catch(this.extractData);
     return result;
   }
 
   private extractData(res: Response) {
+    if(res instanceof HttpErrorResponse)
+      return res.error;
     return res;
   }
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
 }
