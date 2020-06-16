@@ -30,6 +30,9 @@
       <input type="password" matInput [(ngModel)]="data.serviceKey" required>
     </mat-form-field>
   </div>
+  <div>
+      <mat-checkbox [(ngModel)]="data.includeUnlicensedApps" required>Include Unlicensed Apps</mat-checkbox>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="data" [disabled]='data.url === "" 

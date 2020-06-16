@@ -24,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ContrastService } from './contrast.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     MatDividerModule,
     HttpClientModule,
     MatGridListModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatCheckboxModule
   ],
   entryComponents: [AppComponent, ReportingComponent, ConnectionDialog],
   providers: [ContrastService],

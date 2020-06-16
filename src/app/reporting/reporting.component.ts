@@ -12,6 +12,7 @@ export interface ConnectionData {
   username: string;
   apiKey: string;
   serviceKey: string;
+  includeUnlicensedApps: true;
 }
 
 @Component({
@@ -29,6 +30,7 @@ export class ReportingComponent implements OnInit {
   isGeneratingReport: boolean = false;
 
   charts: Array<any> = [];
+  includeUnlicensedApps: boolean = true;
 
   constructor(public dialog: MatDialog, public contrastService: ContrastService) { }
 
@@ -39,11 +41,12 @@ export class ReportingComponent implements OnInit {
     const dialogRef = this.dialog.open(ConnectionDialog, {
       width: '500px',
       disableClose: true,
-      data: { url: this.url, orgId: this.orgId, username: this.username, apiKey: this.apiKey, serviceKey: this.serviceKey }
+      data: { url: this.url, orgId: this.orgId, username: this.username, apiKey: this.apiKey, serviceKey: this.serviceKey, includeUnlicensedApps: false }
     });
 
     dialogRef.afterClosed().subscribe(data => {
       this.isGeneratingReport = true;
+      this.includeUnlicensedApps = data.includeUnlicensedApps;
       this.contrastService.setConnectionDetails(data.url, data.orgId, data.username, data.apiKey, data.serviceKey);
       this.generateReport();
     });
@@ -119,7 +122,8 @@ export class ReportingComponent implements OnInit {
 
 
   buildTop10WellTestedApps(applications: any) {
-    let appCoverageCounts: any[] = applications.filter(function (app) { return app.routes.discovered > 0; }).map(function (app) { return [app, app.routes.discovered != 0 ? (app.routes.exercised / app.routes.discovered * 100) : 0] });
+    let that = this;
+    let appCoverageCounts: any[] = applications.filter(function (app) { return that.includeUnlicensedApps ? app.routes.discovered > 0 : app.license.level.toUpperCase() === 'LICENSED' && app.routes.discovered > 0; }).map(function (app) { return [app, app.routes.discovered != 0 ? (app.routes.exercised / app.routes.discovered * 100) : 0] });
     appCoverageCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
@@ -150,7 +154,8 @@ export class ReportingComponent implements OnInit {
 
 
   buildTop10RemediatingApps(applications: any) {
-    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.remediated + app.trace_breakdown.confirmed + app.trace_breakdown.suspicious + app.trace_breakdown.notProblem] });
+    let that = this;
+    let appTraceCounts: any[] = applications.filter(function (app) { return that.includeUnlicensedApps ? true : app.license.level.toUpperCase() === "LICENSED" }).map(function (app) { return [app, app.trace_breakdown.remediated + app.trace_breakdown.confirmed + app.trace_breakdown.suspicious + app.trace_breakdown.notProblem] });
     appTraceCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
@@ -185,7 +190,8 @@ export class ReportingComponent implements OnInit {
 
 
   buildTop10AppsByVuln(applications: any): void {
-    let appTraceCounts: any[] = applications.map(function (app) { return [app, app.trace_breakdown.criticals + app.trace_breakdown.highs] });
+    let that = this;
+    let appTraceCounts: any[] = applications.filter(function (app) { return that.includeUnlicensedApps ? true :app.license.level.toUpperCase() === "LICENSED" }).map(function (app) { return [app, app.trace_breakdown.criticals + app.trace_breakdown.highs] });
     appTraceCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
@@ -222,6 +228,7 @@ export class ReportingComponent implements OnInit {
     var data: [string, number, number, number, number, number, number, number][] = [["Jan", 0, 0, 0, 0, 0, 0, 0], ["Feb", 0, 0, 0, 0, 0, 0, 0], ["Mar", 0, 0, 0, 0, 0, 0, 0], ["Apr", 0, 0, 0, 0, 0, 0, 0], ["May", 0, 0, 0, 0, 0, 0, 0],
     ["Jun", 0, 0, 0, 0, 0, 0, 0], ["Jul", 0, 0, 0, 0, 0, 0, 0], ["Aug", 0, 0, 0, 0, 0, 0, 0], ["Sep", 0, 0, 0, 0, 0, 0, 0], ["Oct", 0, 0, 0, 0, 0, 0, 0],
     ["Nov", 0, 0, 0, 0, 0, 0, 0], ["Dec", 0, 0, 0, 0, 0, 0, 0]];
+
     open.forEach(function (trend) {
       var date = new Date(0);
       date.setMilliseconds(trend.timestamp);
@@ -245,6 +252,7 @@ export class ReportingComponent implements OnInit {
       data[date.getMonth()][6] += fixedCount.length == 1 ? fixedCount[0] : 0;
       data[date.getMonth()][7] += autoRemediatedCount.length == 1 ? autoRemediatedCount[0] : 0;
     });
+
 
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth();
@@ -397,12 +405,12 @@ export class ReportingComponent implements OnInit {
     this.charts.push(appOnboardingLineChart);
   }
   buildTop10LibsByVuln(libraries: any): void {
-    let LibVulnCounts: any[] = libraries.map(function (libs) {return [libs,libs.total_vulnerabilities] });
+    let LibVulnCounts: any[] = libraries.map(function (libs) { return [libs, libs.total_vulnerabilities] });
     LibVulnCounts.sort(function (first, second) {
       return second[1] - first[1];
     });
 
-    let top10Libs: any[] = LibVulnCounts.length >=10 ? LibVulnCounts.slice(0, 10) : LibVulnCounts;
+    let top10Libs: any[] = LibVulnCounts.length >= 10 ? LibVulnCounts.slice(0, 10) : LibVulnCounts;
     var traceCounts = {};
     top10Libs.forEach(function (arrValue) {
       let libs = arrValue[0];
